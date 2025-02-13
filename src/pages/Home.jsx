@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Wallet from "../components/Wallet";
 import Trading from "../components/Trading";
+import Crypto from "../components/Crypto";
 
 const Home = () => {
   const [update, setUpdate] = useState(false);
@@ -11,9 +12,10 @@ const Home = () => {
 
   return (
     <div className="container">
-      <h1>🚀 Crypto Trading</h1>
-      <Wallet key={update} />
-      <Trading onTransaction={handleTransaction} />
+      {/* <h1>🚀 Crypto Trading</h1> */}
+      <Crypto />
+      {/* <Wallet key={update} />
+      <Trading onTransaction={handleTransaction} /> */}
     </div>
   );
 };
