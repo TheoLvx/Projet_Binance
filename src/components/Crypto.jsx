@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Container, Title, Loader, Anchor } from '@mantine/core';
 
 const API_URL = 'https://api.coingecko.com/api/v3/coins/markets';
 const API_PARAMS = '?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false';
@@ -25,12 +24,12 @@ const Crypto = () => {
   }, []);
 
   return (
-    <Container>
-      <Title order={2} align="center" mb={20}>Top 20 Cryptomonnaies</Title>
+    <div className="crypto-container">
+      <h2>Top 20 Cryptomonnaies</h2>
       {loading ? (
-        <Loader size="lg" />
+        <p>Chargement en cours...</p>
       ) : (
-        <Table highlightOnHover striped>
+        <table className="crypto-table">
           <thead>
             <tr>
               <th>#</th>
@@ -45,9 +44,9 @@ const Crypto = () => {
               <tr key={crypto.id}>
                 <td>{index + 1}</td>
                 <td>
-                  <Anchor href={`https://www.coingecko.com/fr/pi%C3%A8ces/${crypto.id}`} target="_blank" rel="noopener noreferrer">
+                  <a href={`https://www.coingecko.com/fr/pi%C3%A8ces/${crypto.id}`} target="_blank" rel="noopener noreferrer">
                     {crypto.name}
-                  </Anchor>
+                  </a>
                 </td>
                 <td>{crypto.symbol.toUpperCase()}</td>
                 <td>${crypto.current_price.toLocaleString()}</td>
@@ -57,9 +56,9 @@ const Crypto = () => {
               </tr>
             ))}
           </tbody>
-        </Table>
+        </table>
       )}
-    </Container>
+    </div>
   );
 };
 
