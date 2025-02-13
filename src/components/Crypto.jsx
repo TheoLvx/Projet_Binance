@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'https://api.coingecko.com/api/v3/coins/markets';
 const API_PARAMS = '?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false';
@@ -6,6 +7,7 @@ const API_PARAMS = '?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sp
 const Crypto = () => {
   const [cryptos, setCryptos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Permet la navigation vers une autre page
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,13 +43,9 @@ const Crypto = () => {
           </thead>
           <tbody>
             {cryptos.map((crypto, index) => (
-              <tr key={crypto.id}>
+              <tr key={crypto.id} onClick={() => navigate(`/crypto/${crypto.id}`)} style={{ cursor: 'pointer' }}>
                 <td>{index + 1}</td>
-                <td>
-                  <a href={`https://www.coingecko.com/fr/pi%C3%A8ces/${crypto.id}`} target="_blank" rel="noopener noreferrer">
-                    {crypto.name}
-                  </a>
-                </td>
+                <td>{crypto.name}</td>
                 <td>{crypto.symbol.toUpperCase()}</td>
                 <td>${crypto.current_price.toLocaleString()}</td>
                 <td style={{ color: crypto.price_change_percentage_24h >= 0 ? 'green' : 'red' }}>

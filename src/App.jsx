@@ -1,9 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home"; // Garde Home
-import "./App.css";
 
+import Home from "./pages/Home"; 
+import CryptoDetails from "./pages/CryptoDetails"; // Import CryptoDetails
+import Login from "./components/login/Login";
+import Register from "./components/login/Register";
+import "./App.css";
 
 const App = () => {
   return (
@@ -16,6 +19,7 @@ const App = () => {
         <Route path="/blog" element={<h2>Mini-Blog</h2>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/crypto/:id" element={<CryptoDetails />} /> {/* Route dynamique pour chaque crypto */}
       </Routes>
     </Router>
   );

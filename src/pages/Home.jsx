@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Wallet from "../components/Wallet";
 import Trading from "../components/Trading";
+import Crypto from "../components/Crypto";
 
 const Home = () => {
   const [update, setUpdate] = useState(false);
