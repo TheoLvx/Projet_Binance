@@ -16,7 +16,7 @@ const Login = () => {
     if (user) {
       localStorage.setItem("loggedInUser", JSON.stringify(user));
       alert("Connexion réussie !");
-      navigate("/portfolio"); // Rediriger vers le portefeuille après connexion
+      navigate("/portfolio");
     } else {
       alert("Identifiants incorrects !");
     }
