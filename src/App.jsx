@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./Home";
+import Home from "./components/Home";
 import Login from "./components/login/Login";
 import Register from "./components/login/Register";
 
