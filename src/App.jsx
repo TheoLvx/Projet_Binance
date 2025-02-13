@@ -1,9 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./components/Home"
+import Home from "./pages/Home"; // Garde Home
 import Login from "./components/login/Login";
 import Register from "./components/login/Register";
+
 
 const App = () => {
   return (
