@@ -3,6 +3,8 @@ import { Line } from 'react-chartjs-2';
 import MiniBlog from "./Miniblog";
 import { Chart, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
 import "../styles/CryptoDetailsCard.css";
+import Commentaire from "./Commentaire"; // Importation du composant Commentaire
+
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 const CryptoDetailsCard = ({ crypto }) => {
@@ -54,7 +56,11 @@ const CryptoDetailsCard = ({ crypto }) => {
         <div className="blog-container">
           <MiniBlog cryptoId={crypto.name.toLowerCase()} />
         </div>
+       
       </div>
+      <div className="commentaire-box">
+          <Commentaire cryptoId={crypto.name.toLowerCase()} />
+        </div>
     </div>
   );
 };
