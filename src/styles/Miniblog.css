@@ -1,0 +1,23 @@
+/* MiniBlog.css */
+.mini-blog {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: left;
+  }
+  
+  .mini-blog h3 {
+    color: #333;
+    text-align: center;
+  }
+  
+  .mini-blog p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #555;
+  }
+  

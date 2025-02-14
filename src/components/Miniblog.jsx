@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "../styles/MiniBlog.css";
+import "../styles/Miniblog.css";
 
 const MiniBlog = ({ cryptoId }) => {
   const [crypto, setCrypto] = useState(null);
@@ -11,6 +11,7 @@ const MiniBlog = ({ cryptoId }) => {
       try {
         const response = await fetch(`https://api.coingecko.com/api/v3/coins/${cryptoId}`);
         const data = await response.json();
+        console.log(data);
         setCrypto(data);
       } catch (error) {
         console.error("Erreur lors de la récupération des détails:", error);

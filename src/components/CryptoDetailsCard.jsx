@@ -1,5 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import MiniBlog from "./Miniblog";
 
 const CryptoDetailsCard = ({ crypto }) => {
   return (
@@ -21,6 +22,9 @@ const CryptoDetailsCard = ({ crypto }) => {
           }]
         }}
       />
+      
+      {/* Intégration du MiniBlog avec crypto.name */}
+      <MiniBlog cryptoId={crypto.name.toLowerCase()} />
     </div>
   );
 };
