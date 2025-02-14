@@ -1,0 +1,123 @@
+/* 🌌 Conteneur principal */
+.wallet-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #1e1e2f, #2a2a3a);
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 💰 Solde */
+.wallet-balance {
+  font-size: 20px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.wallet-balance span {
+  font-weight: bold;
+  color: #4af626;
+}
+
+/* 💹 Boutons Déposer & Retirer */
+.wallet-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.wallet-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+}
+
+.deposit-btn {
+  background: linear-gradient(135deg, #4caf50, #2e8b57);
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 255, 0, 0.3);
+}
+
+.withdraw-btn {
+  background: linear-gradient(135deg, #ff3d00, #c62828);
+  color: white;
+  box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.3);
+}
+
+.wallet-btn:hover {
+  transform: scale(1.1);
+}
+
+/* 📊 Grille des cryptos */
+.crypto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.crypto-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.crypto-box:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 🕰 Historique des transactions */
+.transaction-history {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.transaction-history li {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+}
+
+.transaction-history li:last-child {
+  border-bottom: none;
+}
+
+.transaction-history span {
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+/* 📱 Mobile-friendly */
+@media (max-width: 768px) {
+  .crypto-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wallet-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
