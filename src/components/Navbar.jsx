@@ -4,12 +4,12 @@ import { UserContext } from "../components/UserContext";
 import "../styles/NavBar.css";
 
 const Navbar = () => {
-  const { user, logoutUser } = useContext(UserContext);  // ✅ Vérifie que `logoutUser` est bien récupéré
+  const { user, loginUser, logoutUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     if (logoutUser) {
-      logoutUser();  // ✅ Appelle la fonction logoutUser
+      logoutUser();  
       navigate("/login");
     } else {
       console.error("Erreur : logoutUser n'est pas défini");

@@ -12,6 +12,20 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  const loginUser = (username, password) => {
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+  
+    const foundUser = users.find((u) => u.username === username && u.password === password);
+    if (!foundUser) {
+      alert("Identifiants incorrects !");
+      return;
+    }
+  
+    setUser(foundUser);
+    localStorage.setItem("loggedInUser", JSON.stringify(foundUser));
+  };
+  
+
   const updateUserBalance = (newBalance) => {
     if (!user) return;
 
@@ -71,15 +85,15 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
-  const withdrawCrypto = (crypto, amount, address) => {
+  const withdrawCrypto = (crypto, amount) => {
     if (!user || !user.portfolio[crypto] || user.portfolio[crypto] < amount) {
       alert("❌ Solde insuffisant !");
       return;
     }
 
     updateUserPortfolio(crypto, -amount);
-    addTransaction("Retrait", crypto, amount, address);
-    alert(`✅ Retrait de ${amount} ${crypto} envoyé à ${address} !`);
+    addTransaction("Retrait", crypto, amount, "Sans adresse");
+    alert(`✅ Retrait de ${amount} ${crypto} effectué !`);
   };
 
   const addTransaction = (type, crypto, amount, info) => {
@@ -106,10 +120,17 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
+  const logoutUser = () => {
+    setUser(null);
+    localStorage.removeItem("loggedInUser");
+  };
+
   return (
     <UserContext.Provider
       value={{
         user,
+        loginUser,
+        logoutUser,
         updateUserBalance,
         updateUserPortfolio,
         depositFunds,
@@ -119,4 +140,5 @@ export const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
+  
 };
