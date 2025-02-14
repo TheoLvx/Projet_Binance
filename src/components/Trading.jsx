@@ -1,63 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from "../components/UserContext";  // ✅ Import du contexte
 
 const Trading = ({ crypto }) => {
+  const { user, updateUserPortfolio, updateUserBalance } = useContext(UserContext); // ✅ Récupère les fonctions du contexte
   const [amount, setAmount] = useState(0);
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));  // Utilisateur connecté
 
-  if (!loggedInUser) {
+  if (!user) {
     return <h2>🔐 Vous devez être connecté pour trader.</h2>;
   }
 
-  // Vérifie si les données de la crypto sont valides
   if (!crypto || !crypto.market_data || !crypto.market_data.current_price) {
     return <p>📊 Données crypto non valides.</p>;
   }
 
-  const cryptoPrice = crypto.market_data.current_price.usd; // Récupérer le prix actuel
+  const cryptoPrice = crypto.market_data.current_price.usd;
 
   const handleBuy = () => {
-    // Vérifier que le montant d'achat est valide
     if (amount <= 0) {
       alert('Veuillez entrer un montant valide.');
       return;
     }
-  
-    // Calculer le coût total de l'achat
+
     const totalCost = cryptoPrice * amount;
-  
-    // Vérifier que l'utilisateur a suffisamment de fonds
-    if (loggedInUser.balance < totalCost) {
+
+    if (user.balance < totalCost) {
       alert('Fonds insuffisants pour cet achat.');
       return;
     }
-  
-    // Initialiser le portefeuille si nécessaire
-    const newPortfolio = loggedInUser.portfolio || {};  // Si portfolio n'existe pas, crée un objet vide
-    const currentAmount = newPortfolio[crypto.name] || 0; // Si la crypto n'est pas encore dans le portefeuille, initialiser à 0
-  
-    // Ajouter la quantité achetée de la crypto au portefeuille
-    newPortfolio[crypto.name] = currentAmount + amount;
-  
-    // Mettre à jour le solde de l'utilisateur
-    const newBalance = loggedInUser.balance - totalCost;
-  
-    // Créer un nouvel objet utilisateur avec les nouvelles valeurs
-    const updatedUser = {
-      ...loggedInUser,
-      balance: newBalance,    // Nouveau solde
-      portfolio: newPortfolio // Nouveau portefeuille avec la crypto ajoutée
-    };
-  
-    // Mettre à jour le `localStorage` avec les nouvelles informations
-    localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
-  
-    // Mettre à jour l'affichage ou l'état du composant si nécessaire
+
+    updateUserPortfolio(crypto.symbol.toUpperCase(), amount); // ✅ Ajoute la crypto au portefeuille
+    updateUserBalance(user.balance - totalCost); // ✅ Met à jour le solde
+
     alert(`Achat de ${amount} ${crypto.name} effectué avec succès !`);
-  
-    // Optionnel : Rediriger l'utilisateur ou réinitialiser certains états après l'achat
   };
-  
-  
 
   return (
     <div>
@@ -74,13 +49,13 @@ const Trading = ({ crypto }) => {
 
       <button onClick={handleBuy}>Acheter</button>
 
-      <h3>Solde actuel: {loggedInUser.balance} $</h3>
+      <h3>Solde actuel: {user.balance} $</h3>
       <h3>Portefeuille:</h3>
       <ul>
-        {Object.entries(loggedInUser.portfolio || {}).length === 0 ? (
+        {Object.entries(user.portfolio || {}).length === 0 ? (
           <p>Aucune crypto dans votre portefeuille.</p>
         ) : (
-          Object.entries(loggedInUser.portfolio).map(([cryptoName, qty]) => (
+          Object.entries(user.portfolio).map(([cryptoName, qty]) => (
             <li key={cryptoName}>
               {cryptoName}: {qty} unités
             </li>

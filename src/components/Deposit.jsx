@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "../components/UserContext";
 
 const DepositWithdraw = () => {
-  const { depositFunds, withdrawCrypto, user } = useContext(UserContext);
+  const { depositFunds, withdrawCrypto } = useContext(UserContext);
   const [amount, setAmount] = useState("");
   const [crypto, setCrypto] = useState("");
   const [address, setAddress] = useState("");
@@ -13,10 +13,9 @@ const DepositWithdraw = () => {
       return;
     }
 
-    depositFunds(parseFloat(amount), crypto || null);
+    depositFunds(parseFloat(amount));
 
     setAmount("");
-    setCrypto("");
   };
 
   const handleWithdraw = () => {
@@ -45,30 +44,42 @@ const DepositWithdraw = () => {
   return (
     <div>
       <h3>Déposer ou retirer des fonds</h3>
-      <input
-        type="number"
-        placeholder="Montant"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <select value={crypto} onChange={(e) => setCrypto(e.target.value)}>
-        <option value="">Sélectionne une crypto</option>
-        <option value="BTC">Bitcoin</option>
-        <option value="ETH">Ethereum</option>
-        <option value="XRP">Ripple</option>
-        <option value="ADA">Cardano</option>
-        <option value="DOT">Polkadot</option>
-      </select>
 
-      <input
-        type="text"
-        placeholder="Adresse du portefeuille"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-      />
+      <div>
+        <h4>💰 Dépôt en USD</h4>
+        <input
+          type="number"
+          placeholder="Montant en dollars"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <button onClick={handleDeposit}>💰 Déposer</button>
+      </div>
 
-      <button onClick={handleDeposit}>💰 Déposer</button>
-      <button onClick={handleWithdraw}>💸 Retirer</button>
+      <div>
+        <h4>💸 Retrait de cryptos</h4>
+        <input
+          type="number"
+          placeholder="Montant en crypto"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <select value={crypto} onChange={(e) => setCrypto(e.target.value)}>
+          <option value="">Sélectionne une crypto</option>
+          <option value="BTC">Bitcoin</option>
+          <option value="ETH">Ethereum</option>
+          <option value="XRP">Ripple</option>
+          <option value="ADA">Cardano</option>
+          <option value="DOT">Polkadot</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Adresse du portefeuille"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+        <button onClick={handleWithdraw}>💸 Retirer</button>
+      </div>
     </div>
   );
 };

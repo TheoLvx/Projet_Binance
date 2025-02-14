@@ -58,21 +58,13 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
-  const depositFunds = (amount, crypto = null) => {
+  const depositFunds = (amount) => {
     if (!user) return;
 
     let updatedUser = { ...user };
+    updatedUser.balance += amount;
 
-    if (crypto) {
-      updatedUser.portfolio = {
-        ...updatedUser.portfolio,
-        [crypto]: (updatedUser.portfolio[crypto] || 0) + amount,
-      };
-      addTransaction("Dépôt Crypto", crypto, amount, "N/A");
-    } else {
-      updatedUser.balance += amount;
-      addTransaction("Dépôt USD", "USD", amount, "N/A");
-    }
+    addTransaction("Dépôt USD", "USD", amount, "Ajout de fonds");
 
     setUser(updatedUser);
     localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
@@ -98,11 +90,6 @@ export const UserProvider = ({ children }) => {
       delete updatedUser.portfolio[crypto];
     }
 
-    const cryptoPrices = JSON.parse(localStorage.getItem("cryptoPrices")) || {};
-    const cryptoValue = amount * (cryptoPrices[crypto] || 0);
-
-    updatedUser.balance += cryptoValue;
-
     addTransaction("Retrait", crypto, amount, `Envoyé à ${address}`);
 
     setUser(updatedUser);
@@ -114,7 +101,7 @@ export const UserProvider = ({ children }) => {
     );
     localStorage.setItem("users", JSON.stringify(updatedUsers));
 
-    alert(`✅ Retrait de ${amount} ${crypto} effectué ! ${cryptoValue.toFixed(2)}$ ajoutés au solde.`);
+    alert(`✅ Retrait de ${amount} ${crypto} envoyé à ${address}`);
   };
 
   const addTransaction = (type, crypto, amount, info) => {
