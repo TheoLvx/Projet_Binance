@@ -20,11 +20,16 @@ const Register = () => {
       return;
     }
 
-    const newUser = { username, password };
+    const newUser = { 
+      username, 
+      password, 
+      balance: 10000 // ✅ Solde initial de 10 000$
+    };
+
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
 
-    alert("Compte créé !");
+    alert("Compte créé avec un solde de 10 000$ !");
     goTo("/login");
   };
 
