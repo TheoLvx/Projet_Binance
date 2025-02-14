@@ -22,7 +22,6 @@ const Navbar = () => {
       <ul className="nav-links">
         <li><Link to="/">🏠 Accueil</Link></li>
         <li><Link to="/wallet">💰 Portefeuille</Link></li>
-        <li><Link to="/trading">📈 Trading</Link></li>
         {user ? (
           <>
             <li className="user-info">👤 {user.username} - 💲{user.balance ?? 0}</li>
