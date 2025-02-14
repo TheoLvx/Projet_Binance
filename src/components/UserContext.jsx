@@ -12,29 +12,6 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  const loginUser = (userData) => {
-    const updatedUser = { 
-      ...userData, 
-      balance: userData.balance ?? 10000, 
-      portfolio: userData.portfolio ?? {} 
-    };
-    
-    setUser(updatedUser);
-    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
-
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((u) =>
-      u.username === updatedUser.username ? updatedUser : u
-    );
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-  };
-
-  const logoutUser = () => {
-    setUser(null); // Réinitialiser l'état utilisateur
-    localStorage.removeItem("loggedInUser"); // Supprimer l'utilisateur du localStorage
-  };
-  
-
   const updateUserBalance = (newBalance) => {
     if (!user) return;
     
@@ -52,7 +29,10 @@ export const UserProvider = ({ children }) => {
   const updateUserPortfolio = (crypto, quantity) => {
     if (!user) return;
 
-    const updatedPortfolio = { ...user.portfolio, [crypto]: (user.portfolio[crypto] || 0) + quantity };
+    const updatedPortfolio = { 
+      ...user.portfolio, 
+      [crypto]: (user.portfolio[crypto] || 0) + quantity 
+    };
 
     const updatedUser = { ...user, portfolio: updatedPortfolio };
     setUser(updatedUser);
@@ -65,10 +45,61 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
+  // ✅ Dépôt de fonds en dollars ou en cryptos
+  const depositFunds = (amount, crypto = null) => {
+    if (!user) return;
+
+    if (crypto) {
+      updateUserPortfolio(crypto, amount);
+      addTransaction("Dépôt Crypto", crypto, amount, "N/A");
+    } else {
+      updateUserBalance(user.balance + amount);
+      addTransaction("Dépôt USD", "USD", amount, "N/A");
+    }
+  };
+
+  // ✅ Retrait de cryptos vers une adresse fictive
+  const withdrawCrypto = (crypto, amount, address) => {
+    if (!user || !user.portfolio[crypto] || user.portfolio[crypto] < amount) {
+      alert("❌ Solde insuffisant pour ce retrait !");
+      return;
+    }
+
+    updateUserPortfolio(crypto, -amount);
+    addTransaction("Retrait", crypto, amount, address);
+    alert(`✅ Retrait de ${amount} ${crypto} envoyé à ${address} !`);
+  };
+
+  // ✅ Ajouter une transaction à l'historique
+  const addTransaction = (type, crypto, amount, info) => {
+    if (!user) return;
+
+    const newTransaction = {
+      date: new Date().toLocaleString(),
+      type,
+      crypto,
+      amount,
+      info
+    };
+
+    const updatedTransactions = [...(user.transactions || []), newTransaction];
+    const updatedUser = { ...user, transactions: updatedTransactions };
+
+    setUser(updatedUser);
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const updatedUsers = users.map((u) =>
+      u.username === updatedUser.username ? updatedUser : u
+    );
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
+
   return (
-    <UserContext.Provider value={{ user, loginUser, updateUserBalance, updateUserPortfolio, logoutUser }}>
+    <UserContext.Provider value={{ 
+      user, updateUserBalance, updateUserPortfolio, depositFunds, withdrawCrypto 
+    }}>
       {children}
     </UserContext.Provider>
   );
-  
 };
