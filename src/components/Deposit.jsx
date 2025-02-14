@@ -3,23 +3,24 @@ import { UserContext } from "../components/UserContext";
 
 const DepositWithdraw = () => {
   const { depositFunds, withdrawCrypto } = useContext(UserContext);
-  const [amount, setAmount] = useState("");
+  const [depositAmount, setDepositAmount] = useState("");  // Montant du dépôt
+  const [withdrawAmount, setWithdrawAmount] = useState(""); // Montant du retrait
   const [crypto, setCrypto] = useState("");
   const [address, setAddress] = useState("");
 
   const handleDeposit = () => {
-    if (!amount || isNaN(amount) || amount <= 0) {
+    if (!depositAmount || isNaN(depositAmount) || depositAmount <= 0) {
       alert("Saisis un montant valide !");
       return;
     }
 
-    depositFunds(parseFloat(amount));
+    depositFunds(parseFloat(depositAmount));
 
-    setAmount("");
+    setDepositAmount(""); // Réinitialisation du champ après dépôt
   };
 
   const handleWithdraw = () => {
-    if (!amount || isNaN(amount) || amount <= 0) {
+    if (!withdrawAmount || isNaN(withdrawAmount) || withdrawAmount <= 0) {
       alert("Saisis un montant valide !");
       return;
     }
@@ -34,9 +35,9 @@ const DepositWithdraw = () => {
       return;
     }
 
-    withdrawCrypto(crypto, parseFloat(amount), address);
+    withdrawCrypto(crypto, parseFloat(withdrawAmount), address);
 
-    setAmount("");
+    setWithdrawAmount(""); // Réinitialisation du champ après retrait
     setCrypto("");
     setAddress("");
   };
@@ -45,24 +46,26 @@ const DepositWithdraw = () => {
     <div>
       <h3>Déposer ou retirer des fonds</h3>
 
+      {/* Dépôt en USD */}
       <div>
         <h4>💰 Dépôt en USD</h4>
         <input
           type="number"
           placeholder="Montant en dollars"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          value={depositAmount}
+          onChange={(e) => setDepositAmount(e.target.value)}
         />
         <button onClick={handleDeposit}>💰 Déposer</button>
       </div>
 
+      {/* Retrait de cryptos */}
       <div>
         <h4>💸 Retrait de cryptos</h4>
         <input
           type="number"
           placeholder="Montant en crypto"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          value={withdrawAmount}
+          onChange={(e) => setWithdrawAmount(e.target.value)}
         />
         <select value={crypto} onChange={(e) => setCrypto(e.target.value)}>
           <option value="">Sélectionne une crypto</option>
