@@ -8,6 +8,7 @@ import MiniBlog from "./pages/MiniBlog.jsx";
 import Home from "./pages/Home"; 
 import CryptoDetails from "./pages/CryptoDetails"; 
 import "./App.css";
+import Wallet from "./components/Wallet.jsx";
 
 const App = () => {
   return (
@@ -16,12 +17,12 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/portfolio" element={<h2>Portefeuille</h2>} />
+          <Route path="/wallet" element={<Wallet />} />
           <Route path="/trading" element={<h2>Trading</h2>} />
           <Route path="/blog" element={<h2>Mini-Blog</h2>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/crypto/:id" element={<CryptoDetails />} /> {/* Route dynamique pour chaque crypto */}
+          <Route path="/crypto/:id" element={<CryptoDetails />} />
         </Routes>
       </Router>
     </UserProvider>
