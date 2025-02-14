@@ -1,94 +1,65 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../components/UserContext";
 
-const Deposit = () => {
-  const { user, depositFunds, withdrawCrypto } = useContext(UserContext);
-  const [depositAmount, setDepositAmount] = useState("");
-  const [depositCrypto, setDepositCrypto] = useState("");
-
-  const [withdrawCryptoType, setWithdrawCryptoType] = useState("");
-  const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [withdrawAddress, setWithdrawAddress] = useState("");
+const DepositWithdraw = () => {
+  const { depositFunds, withdrawCrypto } = useContext(UserContext);
+  const [amount, setAmount] = useState("");
+  const [crypto, setCrypto] = useState("");
 
   const handleDeposit = () => {
-    if (!depositAmount || isNaN(depositAmount) || depositAmount <= 0) {
+    if (!amount || isNaN(amount) || amount <= 0) {
       alert("Saisis un montant valide !");
       return;
     }
 
-    if (depositCrypto) {
-      depositFunds(parseFloat(depositAmount), depositCrypto);
+    if (crypto) {
+      depositFunds(parseFloat(amount), crypto);
     } else {
-      depositFunds(parseFloat(depositAmount));
+      depositFunds(parseFloat(amount));
     }
 
-    alert("✅ Dépôt effectué !");
-    setDepositAmount("");
-    setDepositCrypto("");
+    setAmount("");
+    setCrypto("");
   };
 
   const handleWithdraw = () => {
-    if (!withdrawAmount || isNaN(withdrawAmount) || withdrawAmount <= 0) {
+    if (!amount || isNaN(amount) || amount <= 0) {
       alert("Saisis un montant valide !");
       return;
     }
 
-    if (!withdrawCryptoType || !withdrawAddress) {
-      alert("Sélectionne une crypto et entre une adresse !");
+    if (!crypto) {
+      alert("Sélectionne une crypto !");
       return;
     }
 
-    withdrawCrypto(withdrawCryptoType, parseFloat(withdrawAmount), withdrawAddress);
-    setWithdrawCryptoType("");
-    setWithdrawAmount("");
-    setWithdrawAddress("");
+    withdrawCrypto(crypto, parseFloat(amount));
+
+    setAmount("");
+    setCrypto("");
   };
 
   return (
-    <div className="deposit-withdraw-container">
-      <h2>💰 Dépôt & Retrait</h2>
-
-      <div className="deposit-section">
-        <h3>🟢 Dépôt</h3>
-        <input
-          type="number"
-          placeholder="Montant en USD ou Crypto"
-          value={depositAmount}
-          onChange={(e) => setDepositAmount(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Crypto (laisser vide pour USD)"
-          value={depositCrypto}
-          onChange={(e) => setDepositCrypto(e.target.value)}
-        />
-        <button onClick={handleDeposit}>💰 Déposer</button>
-      </div>
-
-      <div className="withdraw-section">
-        <h3>🔴 Retrait</h3>
-        <input
-          type="text"
-          placeholder="Crypto (ex: BTC, ETH)"
-          value={withdrawCryptoType}
-          onChange={(e) => setWithdrawCryptoType(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Montant"
-          value={withdrawAmount}
-          onChange={(e) => setWithdrawAmount(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Adresse du portefeuille"
-          value={withdrawAddress}
-          onChange={(e) => setWithdrawAddress(e.target.value)}
-        />
-        <button onClick={handleWithdraw}>📤 Retirer</button>
-      </div>
+    <div>
+      <h3>Déposer ou retirer des fonds</h3>
+      <input
+        type="number"
+        placeholder="Montant"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <select value={crypto} onChange={(e) => setCrypto(e.target.value)}>
+        <option value="">Sélectionne une crypto</option>
+        <option value="BTC">Bitcoin</option>
+        <option value="ETH">Ethereum</option>
+        <option value="XRP">Ripple</option>
+        <option value="ADA">Cardano</option>
+        <option value="DOT">Polkadot</option>
+      </select>
+      <button onClick={handleDeposit}>💰 Déposer</button>
+      <button onClick={handleWithdraw}>💸 Retirer</button>
     </div>
   );
 };
 
-export default Deposit;
+export default DepositWithdraw;

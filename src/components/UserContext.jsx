@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
 
   const updateUserBalance = (newBalance) => {
     if (!user) return;
-    
+
     const updatedUser = { ...user, balance: newBalance };
     setUser(updatedUser);
     localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
@@ -29,9 +29,9 @@ export const UserProvider = ({ children }) => {
   const updateUserPortfolio = (crypto, quantity) => {
     if (!user) return;
 
-    const updatedPortfolio = { 
-      ...user.portfolio, 
-      [crypto]: (user.portfolio[crypto] || 0) + quantity 
+    const updatedPortfolio = {
+      ...user.portfolio,
+      [crypto]: (user.portfolio[crypto] || 0) + quantity,
     };
 
     const updatedUser = { ...user, portfolio: updatedPortfolio };
@@ -45,23 +45,35 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
-  // ✅ Dépôt de fonds en dollars ou en cryptos
   const depositFunds = (amount, crypto = null) => {
     if (!user) return;
 
+    let updatedUser = { ...user };
+
     if (crypto) {
-      updateUserPortfolio(crypto, amount);
+      updatedUser.portfolio = {
+        ...updatedUser.portfolio,
+        [crypto]: (updatedUser.portfolio[crypto] || 0) + amount,
+      };
       addTransaction("Dépôt Crypto", crypto, amount, "N/A");
     } else {
-      updateUserBalance(user.balance + amount);
+      updatedUser.balance += amount;
       addTransaction("Dépôt USD", "USD", amount, "N/A");
     }
+
+    setUser(updatedUser);
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const updatedUsers = users.map((u) =>
+      u.username === updatedUser.username ? updatedUser : u
+    );
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
-  // ✅ Retrait de cryptos vers une adresse fictive
   const withdrawCrypto = (crypto, amount, address) => {
     if (!user || !user.portfolio[crypto] || user.portfolio[crypto] < amount) {
-      alert("❌ Solde insuffisant pour ce retrait !");
+      alert("❌ Solde insuffisant !");
       return;
     }
 
@@ -70,7 +82,6 @@ export const UserProvider = ({ children }) => {
     alert(`✅ Retrait de ${amount} ${crypto} envoyé à ${address} !`);
   };
 
-  // ✅ Ajouter une transaction à l'historique
   const addTransaction = (type, crypto, amount, info) => {
     if (!user) return;
 
@@ -79,7 +90,7 @@ export const UserProvider = ({ children }) => {
       type,
       crypto,
       amount,
-      info
+      info,
     };
 
     const updatedTransactions = [...(user.transactions || []), newTransaction];
@@ -96,9 +107,15 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ 
-      user, updateUserBalance, updateUserPortfolio, depositFunds, withdrawCrypto 
-    }}>
+    <UserContext.Provider
+      value={{
+        user,
+        updateUserBalance,
+        updateUserPortfolio,
+        depositFunds,
+        withdrawCrypto,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
