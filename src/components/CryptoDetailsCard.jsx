@@ -51,12 +51,12 @@ const CryptoDetailsCard = ({ crypto }) => {
           />
         </div>
 
-        <Trading />
         {/* Mini Blog */}
         <div className="blog-container">
           <MiniBlog cryptoId={crypto.name.toLowerCase()} />
         </div>
       </div>
+      <Trading crypto={crypto} />
     </div>
   );
 };
