@@ -4,12 +4,16 @@ import { UserContext } from "../components/UserContext";
 import "../styles/NavBar.css";
 
 const Navbar = () => {
-  const { user, logoutUser } = useContext(UserContext);
+  const { user, logoutUser } = useContext(UserContext);  // ✅ Vérifie que `logoutUser` est bien récupéré
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logoutUser();
-    navigate("/login");
+    if (logoutUser) {
+      logoutUser();  // ✅ Appelle la fonction logoutUser
+      navigate("/login");
+    } else {
+      console.error("Erreur : logoutUser n'est pas défini");
+    }
   };
 
   return (
@@ -17,12 +21,11 @@ const Navbar = () => {
       <div className="logo">💹 Binance-Like</div>
       <ul className="nav-links">
         <li><Link to="/">🏠 Accueil</Link></li>
-        <li><Link to="/portfolio">💰 Portefeuille</Link></li>
+        <li><Link to="/wallet">💰 Portefeuille</Link></li>
         <li><Link to="/trading">📈 Trading</Link></li>
-        <li><Link to="/blog">📝 Mini-Blog</Link></li>
         {user ? (
           <>
-            <li className="user-info">👤 {user.username}</li>
+            <li className="user-info">👤 {user.username} - 💲{user.balance ?? 0}</li>
             <li><button className="logout-btn" onClick={handleLogout}>🚪 Déconnexion</button></li>
           </>
         ) : (
