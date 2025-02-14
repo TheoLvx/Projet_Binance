@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
+import { UserContext } from "../UserContext"; 
+import "../../styles/Login.css";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { loginUser } = useContext(UserContext); 
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const user = storedUsers.find(
+    const user = users.find(
       (u) => u.username === username && u.password === password
     );
 
     if (user) {
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      loginUser(user);
       alert("Connexion réussie !");
-      navigate("/portfolio"); // Rediriger vers le portefeuille après connexion
+      navigate("/portfolio");
     } else {
       alert("Identifiants incorrects !");
     }

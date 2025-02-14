@@ -1,47 +1,52 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../styles/Login.css";
 
 const Register = () => {
-  const [nom, setNom] = useState("");
-  const [mdp, setMdp] = useState(""); 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState(""); 
   const goTo = useNavigate(); 
 
   const inscrire = () => {
-    if (!nom || !mdp) {
+    if (!username || !password) {
       alert("Remplis tous les champs !");
       return;
     }
 
-    const utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const existe = utilisateurs.find((user) => user.nom === nom);
-    if (existe) {
-      alert("Ce nom est déjà pris !");
+    if (users.some((user) => user.username === username)) {
+      alert("Ce nom d'utilisateur est déjà pris !");
       return;
     }
 
-    const nouvelUtilisateur = { nom, mdp };
-    utilisateurs.push(nouvelUtilisateur);
-    localStorage.setItem("utilisateurs", JSON.stringify(utilisateurs));
+    const newUser = { 
+      username, 
+      password, 
+      balance: 10000 // ✅ Solde initial de 10 000$
+    };
 
-    alert("Compte créé !");
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Compte créé avec un solde de 10 000$ !");
     goTo("/login");
   };
 
   return (
-    <div className="inscription-container">
+    <div className="register-container">
       <h2>📝 Inscription</h2>
       <input
         type="text"
         placeholder="Nom d'utilisateur"
-        value={nom}
-        onChange={(e) => setNom(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <input
         type="password"
         placeholder="Mot de passe"
-        value={mdp}
-        onChange={(e) => setMdp(e.target.value)}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={inscrire}>Créer un compte</button>
     </div>

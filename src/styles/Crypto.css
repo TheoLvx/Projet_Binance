@@ -1,0 +1,31 @@
+.crypto-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .crypto-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .crypto-table th, .crypto-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .crypto-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .crypto-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .crypto-table tr:hover {
+    background-color: #ddd;
+  }
+  
