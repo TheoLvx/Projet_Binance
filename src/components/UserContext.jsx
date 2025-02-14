@@ -14,17 +14,16 @@ export const UserProvider = ({ children }) => {
 
   const loginUser = (username, password) => {
     let users = JSON.parse(localStorage.getItem("users")) || [];
-  
+
     const foundUser = users.find((u) => u.username === username && u.password === password);
     if (!foundUser) {
       alert("Identifiants incorrects !");
       return;
     }
-  
+
     setUser(foundUser);
     localStorage.setItem("loggedInUser", JSON.stringify(foundUser));
   };
-  
 
   const updateUserBalance = (newBalance) => {
     if (!user) return;
@@ -85,15 +84,37 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
-  const withdrawCrypto = (crypto, amount) => {
-    if (!user || !user.portfolio[crypto] || user.portfolio[crypto] < amount) {
+  const withdrawCrypto = (crypto, amount, address) => {
+    if (!user || !user.portfolio || !user.portfolio[crypto] || user.portfolio[crypto] < amount) {
       alert("❌ Solde insuffisant !");
       return;
     }
 
-    updateUserPortfolio(crypto, -amount);
-    addTransaction("Retrait", crypto, amount, "Sans adresse");
-    alert(`✅ Retrait de ${amount} ${crypto} effectué !`);
+    let updatedUser = { ...user };
+
+    updatedUser.portfolio[crypto] -= amount;
+
+    if (updatedUser.portfolio[crypto] <= 0) {
+      delete updatedUser.portfolio[crypto];
+    }
+
+    const cryptoPrices = JSON.parse(localStorage.getItem("cryptoPrices")) || {};
+    const cryptoValue = amount * (cryptoPrices[crypto] || 0);
+
+    updatedUser.balance += cryptoValue;
+
+    addTransaction("Retrait", crypto, amount, `Envoyé à ${address}`);
+
+    setUser(updatedUser);
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const updatedUsers = users.map((u) =>
+      u.username === updatedUser.username ? updatedUser : u
+    );
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+    alert(`✅ Retrait de ${amount} ${crypto} effectué ! ${cryptoValue.toFixed(2)}$ ajoutés au solde.`);
   };
 
   const addTransaction = (type, crypto, amount, info) => {
@@ -140,5 +161,4 @@ export const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
-  
 };

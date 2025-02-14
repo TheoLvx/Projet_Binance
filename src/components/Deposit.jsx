@@ -2,9 +2,10 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "../components/UserContext";
 
 const DepositWithdraw = () => {
-  const { depositFunds, withdrawCrypto } = useContext(UserContext);
+  const { depositFunds, withdrawCrypto, user } = useContext(UserContext);
   const [amount, setAmount] = useState("");
   const [crypto, setCrypto] = useState("");
+  const [address, setAddress] = useState("");
 
   const handleDeposit = () => {
     if (!amount || isNaN(amount) || amount <= 0) {
@@ -12,11 +13,7 @@ const DepositWithdraw = () => {
       return;
     }
 
-    if (crypto) {
-      depositFunds(parseFloat(amount), crypto);
-    } else {
-      depositFunds(parseFloat(amount));
-    }
+    depositFunds(parseFloat(amount), crypto || null);
 
     setAmount("");
     setCrypto("");
@@ -33,10 +30,16 @@ const DepositWithdraw = () => {
       return;
     }
 
-    withdrawCrypto(crypto, parseFloat(amount));
+    if (!address) {
+      alert("Entrez une adresse de retrait !");
+      return;
+    }
+
+    withdrawCrypto(crypto, parseFloat(amount), address);
 
     setAmount("");
     setCrypto("");
+    setAddress("");
   };
 
   return (
@@ -56,6 +59,14 @@ const DepositWithdraw = () => {
         <option value="ADA">Cardano</option>
         <option value="DOT">Polkadot</option>
       </select>
+
+      <input
+        type="text"
+        placeholder="Adresse du portefeuille"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
+
       <button onClick={handleDeposit}>💰 Déposer</button>
       <button onClick={handleWithdraw}>💸 Retirer</button>
     </div>
