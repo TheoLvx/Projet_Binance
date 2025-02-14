@@ -1,135 +1,94 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from '../components/UserContext';
+import React, { useState } from 'react';
 
 const Trading = ({ crypto }) => {
-  const { users, setUsers } = useContext(UserContext);  // Accède au contexte des utilisateurs
-  const user = users && users.length > 0 ? users[0] : null; // Sécurise l'accès à l'utilisateur
-  
-  const [orderType, setOrderType] = useState('marketOrder');
-  const [quantity, setQuantity] = useState('');
-  const [limitPrice, setLimitPrice] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [amount, setAmount] = useState(0);
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));  // Utilisateur connecté
 
-  // Si aucun utilisateur n'est connecté, afficher un message d'erreur
-  if (!user) {
-    return <p>Veuillez vous connecter pour accéder à cette page.</p>;
+  if (!loggedInUser) {
+    return <h2>🔐 Vous devez être connecté pour trader.</h2>;
   }
 
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-    setError('');
-    setSuccess('');
-  };
+  // Vérifie si les données de la crypto sont valides
+  if (!crypto || !crypto.market_data || !crypto.market_data.current_price) {
+    return <p>📊 Données crypto non valides.</p>;
+  }
 
-  const handleLimitPriceChange = (e) => {
-    setLimitPrice(e.target.value);
-    setError('');
-    setSuccess('');
-  };
+  const cryptoPrice = crypto.market_data.current_price.usd; // Récupérer le prix actuel
 
-  const handleOrderSubmit = (e) => {
-    e.preventDefault();
-
-    const quantityNum = parseFloat(quantity);
-    const limitPriceNum = parseFloat(limitPrice);
-
-    // Vérification des entrées
-    if (isNaN(quantityNum) || quantityNum <= 0) {
-      setError('La quantité doit être un nombre positif.');
+  const handleBuy = () => {
+    // Vérifier que le montant d'achat est valide
+    if (amount <= 0) {
+      alert('Veuillez entrer un montant valide.');
       return;
     }
-
-    if (orderType === 'limitOrder' && (isNaN(limitPriceNum) || limitPriceNum <= 0)) {
-      setError('Le prix limite doit être un nombre positif.');
+  
+    // Calculer le coût total de l'achat
+    const totalCost = cryptoPrice * amount;
+  
+    // Vérifier que l'utilisateur a suffisamment de fonds
+    if (loggedInUser.balance < totalCost) {
+      alert('Fonds insuffisants pour cet achat.');
       return;
     }
-
-    const totalCost = quantityNum * crypto.market_data.current_price.usd;
-
-    // Vérification des fonds disponibles
-    if (totalCost > user.balance) {
-      setError('Fonds insuffisants pour effectuer cet achat.');
-      return;
-    }
-
-    // Mise à jour du portefeuille et de la balance après un achat réussi
-    const updatedBalance = user.balance - totalCost;
-    const updatedPortfolio = { ...user.portfolio };
-
-    if (updatedPortfolio[crypto.symbol]) {
-      updatedPortfolio[crypto.symbol] += quantityNum;
-    } else {
-      updatedPortfolio[crypto.symbol] = quantityNum;
-    }
-
-    // Ajout d'une transaction dans l'historique des transactions
-    const updatedTransactions = Array.isArray(user.transactions) ? [...user.transactions] : [];
-
-    updatedTransactions.push({
-      date: new Date().toLocaleString(),
-      type: 'Achat',
-      amount: quantityNum,
-      crypto: crypto.symbol,
-      info: `Achat à ${crypto.market_data.current_price.usd} USD`,
-    });
-
-    // Mettre à jour les informations utilisateur dans le contexte
-    setUsers([
-      {
-        ...user,
-        balance: updatedBalance,
-        portfolio: updatedPortfolio,
-        transactions: updatedTransactions,
-      }
-    ]);
-
-    // Réinitialiser les champs après une transaction réussie
-    setQuantity('');
-    setLimitPrice('');
-    setSuccess(`Achat de ${quantityNum} ${crypto.symbol} effectué avec succès.`);
+  
+    // Initialiser le portefeuille si nécessaire
+    const newPortfolio = loggedInUser.portfolio || {};  // Si portfolio n'existe pas, crée un objet vide
+    const currentAmount = newPortfolio[crypto.name] || 0; // Si la crypto n'est pas encore dans le portefeuille, initialiser à 0
+  
+    // Ajouter la quantité achetée de la crypto au portefeuille
+    newPortfolio[crypto.name] = currentAmount + amount;
+  
+    // Mettre à jour le solde de l'utilisateur
+    const newBalance = loggedInUser.balance - totalCost;
+  
+    // Créer un nouvel objet utilisateur avec les nouvelles valeurs
+    const updatedUser = {
+      ...loggedInUser,
+      balance: newBalance,    // Nouveau solde
+      portfolio: newPortfolio // Nouveau portefeuille avec la crypto ajoutée
+    };
+  
+    // Mettre à jour le `localStorage` avec les nouvelles informations
+    localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+  
+    // Mettre à jour l'affichage ou l'état du composant si nécessaire
+    alert(`Achat de ${amount} ${crypto.name} effectué avec succès !`);
+  
+    // Optionnel : Rediriger l'utilisateur ou réinitialiser certains états après l'achat
   };
+  
+  
 
   return (
-    <div className="trading-box">
-      <div className="tabs">
-        <button onClick={() => setOrderType('marketOrder')} className={orderType === 'marketOrder' ? 'active' : ''}>
-          Acheter au marché
-        </button>
-        <button onClick={() => setOrderType('limitOrder')} className={orderType === 'limitOrder' ? 'active' : ''}>
-          Ordre à cours limité
-        </button>
+    <div>
+      <h2>🛒 Trading - {crypto.name} ({crypto.symbol.toUpperCase()})</h2>
+
+      <div>
+        <label>Montant:</label>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
       </div>
 
-      <form onSubmit={handleOrderSubmit} className="order-form">
-        <div>
-          <label>Quantité :</label>
-          <input
-            type="number"
-            value={quantity}
-            onChange={handleQuantityChange}
-            min="1"
-            required
-          />
-        </div>
+      <button onClick={handleBuy}>Acheter</button>
 
-        {orderType === 'limitOrder' && (
-          <div>
-            <label>Prix limite (USD) :</label>
-            <input
-              type="number"
-              value={limitPrice}
-              onChange={handleLimitPriceChange}
-              required
-            />
-          </div>
+      <h3>Solde actuel: {loggedInUser.balance} $</h3>
+      <h3>Portefeuille:</h3>
+      <ul>
+        {Object.entries(loggedInUser.portfolio || {}).length === 0 ? (
+          <p>Aucune crypto dans votre portefeuille.</p>
+        ) : (
+          Object.entries(loggedInUser.portfolio).map(([cryptoName, qty]) => (
+            <li key={cryptoName}>
+              {cryptoName}: {qty} unités
+            </li>
+          ))
         )}
+      </ul>
 
-        <button type="submit">Passer l'ordre</button>
-
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
-      </form>
+      <p>Prix actuel de {crypto.name}: {cryptoPrice}$</p>
     </div>
   );
 };
