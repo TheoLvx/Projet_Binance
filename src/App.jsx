@@ -11,6 +11,7 @@ import "./App.css";
 
 const App = () => {
   return (
+    <UserProvider >
     <Router>
       <Navbar />
       <Routes>
