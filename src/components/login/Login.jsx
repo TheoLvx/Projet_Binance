@@ -9,20 +9,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const user = users.find(
-      (u) => u.username === username && u.password === password
-    );
-
-    if (user) {
-      loginUser(user);
-      alert("Connexion réussie !");
-      navigate("/portfolio");
-    } else {
-      alert("Identifiants incorrects !");
+    if (!username || !password) {
+      alert("Remplis tous les champs !");
+      return;
     }
+  
+    loginUser(username, password);
+    navigate("/wallet"); 
   };
+  
 
   return (
     <div className="login-container">
