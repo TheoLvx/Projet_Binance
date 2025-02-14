@@ -1,5 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import MiniBlog from "./Miniblog";
 import { Chart, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
 
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
@@ -41,6 +42,9 @@ const CryptoDetailsCard = ({ crypto }) => {
           }
         }}
       />
+      
+      {/* Intégration du MiniBlog avec crypto.name */}
+      <MiniBlog cryptoId={crypto.name.toLowerCase()} />
     </div>
   );
 };
