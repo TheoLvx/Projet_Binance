@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import MiniBlog from "./Miniblog";
 import { Chart, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
 import "../styles/CryptoDetailsCard.css";
+import Trading from './Trading';
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 const CryptoDetailsCard = ({ crypto }) => {
@@ -49,12 +50,13 @@ const CryptoDetailsCard = ({ crypto }) => {
             }}
           />
         </div>
-  
+
         {/* Mini Blog */}
         <div className="blog-container">
           <MiniBlog cryptoId={crypto.name.toLowerCase()} />
         </div>
       </div>
+      <Trading crypto={crypto} />
     </div>
   );
 };
