@@ -4,6 +4,8 @@ import MiniBlog from "./Miniblog";
 import { Chart, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
 import "../styles/CryptoDetailsCard.css";
 import Trading from './Trading';
+import Commentaire from "./Commentaire"; // Importation du composant Commentaire
+
 Chart.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 const CryptoDetailsCard = ({ crypto }) => {
@@ -57,6 +59,10 @@ const CryptoDetailsCard = ({ crypto }) => {
         </div>
       </div>
       <Trading crypto={crypto} />
+      <div className="commentaire-box">
+        <Commentaire cryptoId={crypto.name.toLowerCase()} />
+      </div>
+
     </div>
   );
 };
