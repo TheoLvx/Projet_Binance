@@ -42,24 +42,32 @@ const DepositWithdraw = () => {
   return (
     <div>
       <h3>Déposer ou retirer des fonds</h3>
-      <input
-        type="number"
-        placeholder="Montant"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <select value={crypto} onChange={(e) => setCrypto(e.target.value)}>
-        <option value="">Sélectionne une crypto</option>
-        <option value="BTC">Bitcoin</option>
-        <option value="ETH">Ethereum</option>
-        <option value="XRP">Ripple</option>
-        <option value="ADA">Cardano</option>
-        <option value="DOT">Polkadot</option>
-      </select>
-      <button onClick={handleDeposit}>💰 Déposer</button>
-      <button onClick={handleWithdraw}>💸 Retirer</button>
+      <div className="wallet-actions">
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Montant"
+          className="wallet-input"
+        />
+        <select value={crypto} onChange={(e) => setCrypto(e.target.value)}>
+          <option value="">Sélectionne une crypto</option>
+          <option value="BTC">Bitcoin</option>
+          <option value="ETH">Ethereum</option>
+          <option value="XRP">Ripple</option>
+          <option value="ADA">Cardano</option>
+          <option value="DOT">Polkadot</option>
+        </select>
+        <button className="wallet-btn deposit-btn" onClick={handleDeposit}>
+          ➕ Déposer
+        </button>
+        <button className="wallet-btn withdraw-btn" onClick={handleWithdraw}>
+          ➖ Retirer
+        </button>
+      </div>
     </div>
   );
+
 };
 
 export default DepositWithdraw;
