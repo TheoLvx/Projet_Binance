@@ -24,7 +24,7 @@ const Navbar = () => {
         <li><Link to="/wallet">💰 Portefeuille</Link></li>
         {user ? (
           <>
-            <li className="user-info">👤 {user.username} - 💲{user.balance ?? 0}</li>
+            <li className="user-info">👤 {user.username} | {(user.balance ?? 0).toFixed(2)}💲</li>
             <li><button className="logout-btn" onClick={handleLogout}>🚪 Déconnexion</button></li>
           </>
         ) : (
