@@ -2,11 +2,11 @@ import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../components/UserContext";
 
 const Wallet = () => {
-  const { user, updateUserBalance, updateUserPortfolio } = useContext(UserContext);
-  const [cryptoPrices, setCryptoPrices] = useState({}); // Stocker les prix en temps réel
+  const { user } = useContext(UserContext);
+  const [cryptoPrices, setCryptoPrices] = useState({});
 
   useEffect(() => {
-    // 🔥 Récupérer les prix des cryptos depuis l'API CoinGecko
+    // 🔥 Récupérer les prix des cryptos en temps réel
     fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,cardano,polkadot&vs_currencies=usd")
       .then(res => res.json())
       .then(data => setCryptoPrices({
@@ -23,15 +23,20 @@ const Wallet = () => {
     return <h2>🔐 Vous devez être connecté pour voir votre portefeuille.</h2>;
   }
 
-  const totalPortfolioValue = Object.entries(user.portfolio || {}).reduce((total, [crypto, qty]) => {
+  // ✅ Calculer la valeur des cryptos détenues
+  const cryptoValue = Object.entries(user.portfolio || {}).reduce((total, [crypto, qty]) => {
     return total + (cryptoPrices[crypto] || 0) * qty;
   }, 0);
+
+  // ✅ Calculer la valeur totale du portefeuille
+  const totalBalance = user.balance + cryptoValue;
 
   return (
     <div className="wallet-container">
       <h2>💰 Portefeuille</h2>
       <p><strong>Solde en dollars :</strong> {user.balance}$</p>
-      <p><strong>Valeur totale du portefeuille :</strong> {totalPortfolioValue.toFixed(2)}$</p>
+      <p><strong>Valeur des cryptos :</strong> {cryptoValue.toFixed(2)}$</p>
+      <p><strong>Valeur totale du portefeuille :</strong> {totalBalance.toFixed(2)}$</p>
 
       <h3>📊 Cryptos détenues :</h3>
       <ul>
