@@ -8,7 +8,7 @@ const API_PARAMS = '?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sp
 const Crypto = () => {
   const [cryptos, setCryptos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Permet la navigation vers une autre page
+  const navigate = useNavigate();  
 
   useEffect(() => {
     const fetchData = async () => {
